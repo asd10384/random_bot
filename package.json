@@ -1,0 +1,29 @@
+{
+  "name": "random_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "npm run build && node .",
+    "build": "ts-cleaner && tsc",
+    "dev:watch": "nodemon -e ts --exec 'ts-cleaner && tsc && node . || exit 1'",
+    "dev": "npm run build && node ."
+  },
+  "author": "tkrmagid",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.2.1",
+    "better-sqlite3": "^8.0.1",
+    "cheerio": "^1.0.0-rc.12",
+    "colors": "^1.4.0",
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
+    "quick.db": "^9.0.6",
+    "request": "^2.88.2",
+    "ts-cleaner": "^1.0.5"
+  },
+  "devDependencies": {
+    "@types/request": "^2.48.8"
+  }
+}
