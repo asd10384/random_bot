@@ -40,7 +40,7 @@ export default class implements Command {
   msgmetadata?: { name: string; des: string; }[] = undefined;
 
   /** 실행되는 부분 */
-  async slashRun(interaction: CommandInteraction) {
+  async slashRun(interaction: CommandInteraction): Promise<any> {
     const cmd = interaction.options.data[0];
     if (cmd.name === "test") {
       const data = cmd.options ? cmd.options[0]?.value : undefined;
