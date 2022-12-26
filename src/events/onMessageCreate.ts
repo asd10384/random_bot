@@ -1,4 +1,5 @@
 import { ChannelType, Message } from "discord.js";
+import { Logger } from "../utils/Logger";
 import { client, handler } from "..";
 
 export const onMessageCreate = async (message: Message) => {
@@ -12,7 +13,7 @@ export const onMessageCreate = async (message: Message) => {
       if (!command || !command.messageRun) return handler.err(message, commandName);
       command.messageRun(message, args);
     } catch(error) {
-      if (client.debug) console.log(error); // 오류확인
+      if (client.debug) Logger.error(error as string); // 오류확인
       handler.err(message, commandName);
     } finally {
       client.msgdelete(message, 0, true);

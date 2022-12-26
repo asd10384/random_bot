@@ -14,10 +14,9 @@ import { hero, Heros } from "../random/overwatch/Heros";
  * if (!(await ckper(message))) return message.channel.send({ embeds: [ emper ] }).then(m => client.msgdelete(m, 1));
  */
 
-/** 예시 명령어 */
 export default class implements Command {
   /** 해당 명령어 설명 */
-  name = "오버워치";
+  name = "오버워치랜덤";
   visible = true;
   description = "오버워치 관련 랜덤";
   information = "오버워치 관련 랜덤";
@@ -28,7 +27,7 @@ export default class implements Command {
     options: [
       {
         type: ApplicationCommandOptionType.SubcommandGroup,
-        name: "랜덤영웅",
+        name: "영웅",
         description: "오버워치 영웅 랜덤",
         options: [
           {
@@ -55,18 +54,18 @@ export default class implements Command {
       },
       {
         type: ApplicationCommandOptionType.Subcommand,
-        name: "랜덤포지션",
+        name: "포지션",
         description: "오버워치 포지션 랜덤"
       }
     ]
   };
   msgmetadata?: { name: string; des: string; }[] = [
     {
-      name: "랜덤영웅 [전체|탱커|딜러|힐러]",
+      name: "영웅 [전체|탱커|딜러|힐러]",
       des: "오버워치 영웅 랜덤"
     },
     {
-      name: "랜덤포지션",
+      name: "포지션",
       des: "오버워치 포지션 랜덤"
     }
   ];
@@ -74,23 +73,23 @@ export default class implements Command {
   /** 실행되는 부분 */
   async slashRun(interaction: CommandInteraction): Promise<any> {
     const cmd = interaction.options.data[0];
-    if (cmd.name === "랜덤영웅") {
+    if (cmd.name === "영웅") {
       const data = cmd.options ? cmd.options[0]?.name : undefined;
       if (data == "전체") return await interaction.followUp({ embeds: [ await this.hero(interaction.member as GuildMember, "all") ] });
       if (data == "탱커") return await interaction.followUp({ embeds: [ await this.hero(interaction.member as GuildMember, "tanks") ] });
       if (data == "딜러") return await interaction.followUp({ embeds: [ await this.hero(interaction.member as GuildMember, "damages") ] });
       if (data == "힐러") return await interaction.followUp({ embeds: [ await this.hero(interaction.member as GuildMember, "supports") ] });
     }
-    if (cmd.name == "랜덤포지션") return await interaction.followUp({ embeds: [ this.posi(interaction.member as GuildMember) ] });
+    if (cmd.name == "포지션") return await interaction.followUp({ embeds: [ this.posi(interaction.member as GuildMember) ] });
   }
   async messageRun(message: Message, args: string[]) {
-    if (args[0] == "랜덤영웅") {
+    if (args[0] == "영웅") {
       if (args[1] == "전체") return message.channel.send({ embeds: [ await this.hero(message.member!, "all") ] }).then(m => client.msgdelete(m, 3));
       if (args[1] == "탱커") return message.channel.send({ embeds: [ await this.hero(message.member!, "tanks") ] }).then(m => client.msgdelete(m, 3));
       if (args[1] == "딜러") return message.channel.send({ embeds: [ await this.hero(message.member!, "damages") ] }).then(m => client.msgdelete(m, 3));
       if (args[1] == "힐러") return message.channel.send({ embeds: [ await this.hero(message.member!, "supports") ] }).then(m => client.msgdelete(m, 3));
     }
-    if (args[0] == "랜덤포지션") return message.channel.send({ embeds: [ this.posi(message.member!) ] }).then(m => client.msgdelete(m, 3));
+    if (args[0] == "포지션") return message.channel.send({ embeds: [ this.posi(message.member!) ] }).then(m => client.msgdelete(m, 3));
     return message.channel.send({ embeds: [ this.help() ] }).then(m => client.msgdelete(m, 4));
   }
 
@@ -116,7 +115,7 @@ export default class implements Command {
     const r = Math.floor(Math.random()*list.length);
     const hero = list[r];
     return client.mkembed({
-      title: `오버워치 영웅랜덤: **${
+      title: `오버워치 랜덤 영웅: **${
         data == "all" ? "전체"
           : data == "tanks" ? "탱커"
           : data == "damages" ? "딜러"

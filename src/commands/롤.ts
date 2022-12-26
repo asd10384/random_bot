@@ -14,10 +14,9 @@ import { champions, championtype, postiontype } from "../random/lol/champions";
  * if (!(await ckper(message))) return message.channel.send({ embeds: [ emper ] }).then(m => client.msgdelete(m, 1));
  */
 
-/** 예시 명령어 */
 export default class implements Command {
   /** 해당 명령어 설명 */
-  name = "롤";
+  name = "롤랜덤";
   visible = true;
   description = "롤 관련 랜덤";
   information = "롤 관련 랜덤";
