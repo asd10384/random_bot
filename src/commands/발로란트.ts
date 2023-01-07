@@ -174,14 +174,18 @@ export default class implements Command {
 
   mapsrandom(member: GuildMember): { embeds: EmbedBuilder[], files: any[] } {
     let list: string[] = Object.keys(maps);
-    const r = Math.floor(Math.random()*list.length);
-    const file = new AttachmentBuilder(join(__dirname, "../../images/maps", maps[list[r]]+".png"));
+    let rlist: number[] = [];
+    for (let i=0; i<20; i++) {
+      rlist.push(Math.floor(Math.random()*rlist.length));
+    }
+    const r = rlist.push(Math.floor(Math.random()*list.length));
+    const file = new AttachmentBuilder(join(__dirname, "../../images/maps", maps[list[rlist[r]]]+".png"));
     return {
       embeds: [
         client.mkembed({
           author: { name: member.nickname || member.user.username, iconURL: member.displayAvatarURL({ forceStatic: false }) },
-          title: `발로란트 맵 랜덤: ${list[r]}`,
-          image: `attachment://${maps[list[r]]}.png`
+          title: `발로란트 맵 랜덤: ${list[rlist[r]]}`,
+          image: `attachment://${maps[list[rlist[r]]]}.png`
         })
       ],
       files: [ file ]
