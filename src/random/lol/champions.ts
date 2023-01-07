@@ -1,9 +1,8 @@
 import request from "request";
 import { load } from "cheerio";
+import { positiontype } from "./positions";
 
 let url = "https://www.op.gg/champions?hl=ko_KR";
-
-export type postiontype = "TOP" | "JUNGLE" | "MID" | "ADC" | "SUPPORT";
 
 interface pagechampiontype {
   id: number;
@@ -11,7 +10,7 @@ interface pagechampiontype {
   is_rip: boolean;
   average_stats: any;
   positions: {
-    name: postiontype;
+    name: positiontype;
     stats: any;
     roles: { name: string; stats: any; }[];
     counters: { champion_id: number; play: number; win: number; }[];
@@ -44,7 +43,7 @@ export interface championtype {
   key: string;
   name: string;
   image_url: string;
-  position: postiontype;
+  position: positiontype;
 }
 
 export const champions = () => {

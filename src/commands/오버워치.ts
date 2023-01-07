@@ -53,9 +53,14 @@ export default class implements Command {
         ]
       },
       {
-        type: ApplicationCommandOptionType.Subcommand,
+        type: ApplicationCommandOptionType.SubcommandGroup,
         name: "포지션",
-        description: "오버워치 포지션 랜덤"
+        description: "오버워치 포지션 랜덤",
+        options: [{
+          type: ApplicationCommandOptionType.Subcommand,
+          name: "전체",
+          description: "오버워치 포지션 전체 랜덤"
+        }]
       }
     ]
   };
@@ -65,8 +70,8 @@ export default class implements Command {
       des: "오버워치 영웅 랜덤"
     },
     {
-      name: "포지션",
-      des: "오버워치 포지션 랜덤"
+      name: "포지션 전체",
+      des: "오버워치 포지션 전체 랜덤"
     }
   ];
 

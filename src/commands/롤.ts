@@ -3,7 +3,8 @@ import { Command } from "../interfaces/Command";
 import { Message, EmbedBuilder, ApplicationCommandOptionType, ChatInputApplicationCommandData, CommandInteraction, GuildMember } from "discord.js";
 // import { check_permission as ckper, embed_permission as emper } from "../utils/Permission";
 // import { QDB } from "../databases/Quickdb";
-import { champions, championtype, postiontype } from "../random/lol/champions";
+import { champions, championtype } from "../random/lol/champions";
+import { positions, positiontype } from "../random/lol/positions";
 
 /**
  * DB
@@ -33,41 +34,55 @@ export default class implements Command {
           {
             type: ApplicationCommandOptionType.Subcommand,
             name: "전체",
-            description: "전체 캐릭터 랜덤"
+            description: "롤 전체 캐릭터 랜덤"
           },
           {
             type: ApplicationCommandOptionType.Subcommand,
             name: "탑",
-            description: "탑 캐릭터 랜덤"
+            description: "롤 탑 캐릭터 랜덤"
           },
           {
             type: ApplicationCommandOptionType.Subcommand,
             name: "정글",
-            description: "정글 캐릭터 랜덤"
+            description: "롤 정글 캐릭터 랜덤"
           },
           {
             type: ApplicationCommandOptionType.Subcommand,
             name: "미드",
-            description: "정글 캐릭터 랜덤"
+            description: "롤 정글 캐릭터 랜덤"
           },
           {
             type: ApplicationCommandOptionType.Subcommand,
             name: "바텀",
-            description: "바텀 캐릭터 랜덤"
+            description: "롤 바텀 캐릭터 랜덤"
           },
           {
             type: ApplicationCommandOptionType.Subcommand,
             name: "서폿",
-            description: "서폿 캐릭터 랜덤"
+            description: "롤 서폿 캐릭터 랜덤"
           }
         ]
+      },
+      {
+        type: ApplicationCommandOptionType.SubcommandGroup,
+        name: "포지션",
+        description: "롤 포지션 관련 랜덤",
+        options: [{
+          type: ApplicationCommandOptionType.Subcommand,
+          name: "전체",
+          description: "롤 포지션 전체 랜덤"
+        }]
       }
     ]
   };
   msgmetadata?: { name: string; des: string; }[] = [
     {
       name: "캐릭터 [전체|탑|정글|미드|바텀|서폿]",
-      des: "[전체|탑|정글|미드|바텀|서폿] 캐릭터 랜덤"
+      des: "캐릭터 [전체|탑|정글|미드|바텀|서폿] 랜덤"
+    },
+    {
+      name: "포지션 전체",
+      des: "포지션 전체 랜덤"
     }
   ];
 
@@ -83,6 +98,7 @@ export default class implements Command {
       if (data == "바텀") return await interaction.followUp({ embeds: [ await this.championsrandom(interaction.member as GuildMember, "ADC") ] });
       if (data == "서폿") return await interaction.followUp({ embeds: [ await this.championsrandom(interaction.member as GuildMember, "SUPPORT") ] });
     }
+    if (cmd.name == "포지션") return await interaction.followUp({ embeds: [ this.posirandom(interaction.member as GuildMember) ] });
     return;
   }
   async messageRun(message: Message, args: string[]) {
@@ -94,6 +110,7 @@ export default class implements Command {
       if (args[1] == "바텀") return message.channel.send({ embeds: [ await this.championsrandom(message.member!, "ADC") ] }).then(m => client.msgdelete(m, 4));
       if (args[1] == "서폿") return message.channel.send({ embeds: [ await this.championsrandom(message.member!, "SUPPORT") ] }).then(m => client.msgdelete(m, 4));
     }
+    if (args[1] == "포지션") return await message.channel.send({ embeds: [ this.posirandom(message.member!) ] });
     return message.channel.send({ embeds: [ this.help() ] }).then(m => client.msgdelete(m, 6));
   }
 
@@ -101,7 +118,7 @@ export default class implements Command {
     return client.help(this.metadata.name, this.metadata, this.msgmetadata)!;
   }
 
-  async championsrandom(member: GuildMember, postion: postiontype | "ALL") {
+  async championsrandom(member: GuildMember, postion: positiontype | "ALL") {
     const getchampions = await champions().catch(() => {
       return undefined;
     });
@@ -117,7 +134,7 @@ export default class implements Command {
     if (postion == "ADC") championlist = getchampions.filter(champ => champ.position == "ADC");
     if (postion == "SUPPORT") championlist = getchampions.filter(champ => champ.position == "SUPPORT");
     const r = Math.floor(Math.random() * championlist.length);
-    const postionname = (postion: postiontype | "ALL") => {
+    const postionname = (postion: positiontype | "ALL") => {
       return postion == "ALL" ? "전체"
         : postion == "TOP" ? "탑"
         : postion == "JUNGLE" ? "정글"
@@ -139,6 +156,15 @@ export default class implements Command {
         포지션: ${postionname(champion.position)}
       `,
       thumbnail: champion.image_url
+    });
+  }
+
+  posirandom(member: GuildMember): EmbedBuilder {
+    let list: string[] = Object.keys(positions);
+    const r = Math.floor(Math.random()*list.length);
+    return client.mkembed({
+      author: { name: member.nickname || member.user.username, iconURL: member.displayAvatarURL({ forceStatic: false }) },
+      title: `롤 포지션 랜덤: ${list[r]}`
     });
   }
 }
