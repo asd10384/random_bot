@@ -176,9 +176,9 @@ export default class implements Command {
     let list: string[] = Object.keys(maps);
     let rlist: number[] = [];
     for (let i=0; i<20; i++) {
-      rlist.push(Math.floor(Math.random()*rlist.length));
+      rlist.push(Math.floor(Math.random()*list.length));
     }
-    const r = rlist.push(Math.floor(Math.random()*list.length));
+    const r = Math.floor(Math.random()*rlist.length);
     const file = new AttachmentBuilder(join(__dirname, "../../images/maps", maps[list[rlist[r]]]+".png"));
     return {
       embeds: [
