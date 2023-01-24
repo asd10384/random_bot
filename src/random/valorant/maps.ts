@@ -9,5 +9,6 @@ export const maps: {
   "아이스박스": "icebox",
   "브리즈": "breeze",
   "프랙처": "fracture",
-  "펄": "pearl"
+  "펄": "pearl",
+  "로터스": "lotus"
 };
