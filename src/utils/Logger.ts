@@ -1,7 +1,7 @@
 import colors from "colors/safe";
 import { Timestamp } from "./Timestamp";
 
-type logType = "log" | "info" | "warn" | "error" | "debug" | "ready" | "slash";
+type logType = "log" | "info" | "warn" | "error" | "debug" | "ready" | "site";
 
 export const log = (content: string, type: logType) => {
   const timestamp = colors.white(`[${Timestamp()}]`);
@@ -25,6 +25,9 @@ export const log = (content: string, type: logType) => {
     case "ready":
       return console.log(`${colors.green("[READY]")} ${timestamp} ${content}`);
       
+    case "site":
+      return console.log(`${colors.blue("[SITE]")} ${timestamp} ${content}`);
+      
     default:
       throw new TypeError("Logger 타입이 올바르지 않습니다.");
   }
@@ -36,5 +39,6 @@ export const Logger = {
   error: (content: string) => log(content, "error"),
   debug: (content: string) => log(content, "debug"),
   info: (content: string) => log(content, "info"),
-  ready: (content: string) => log(content, "ready")
+  ready: (content: string) => log(content, "ready"),
+  site: (content: string) => log(content, "site")
 }

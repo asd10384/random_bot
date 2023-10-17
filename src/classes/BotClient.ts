@@ -1,6 +1,7 @@
 import "dotenv/config";
 import { ApplicationCommandOptionType, ChatInputApplicationCommandData, Client, ClientEvents, ColorResolvable, EmbedBuilder, EmbedField, Message } from "discord.js";
 import { Consts } from "../config/consts";
+// import { Logger } from "../utils/Logger";
 
 export class BotClient extends Client {
   public debug: boolean;
@@ -9,16 +10,14 @@ export class BotClient extends Client {
 
   public constructor() {
     super({ intents: Consts.CLIENT_INTENTS });
-    if (!process.env.DISCORD_TOKEN) {
-      throw new TypeError("DISCORD_TOKEN을 찾을수 없음");
-    }
-
+    
     this.debug = JSON.parse(process.env.DEBUG || "false");
-    this.prefix = process.env.PREFIX || "t;";
+    this.prefix = process.env.PREFIX || "r;";
 
     this.embedColor = process.env.EMBED_COLOR
       ? process.env.EMBED_COLOR.trim().charAt(0).toLocaleUpperCase() + process.env.EMBED_COLOR.trim().slice(1).toLocaleLowerCase() as ColorResolvable
       : "Orange";
+
     this.login(process.env.DISCORD_TOKEN);
   }
 
@@ -27,7 +26,7 @@ export class BotClient extends Client {
     if (deletetime < 100) deletetime = 100;
     setTimeout(() => {
       try {
-        if (message.deletable) message.delete();
+        if (message.deletable) message.delete().catch(() => {});
       } catch {};
     }, deletetime);
   }
@@ -41,7 +40,7 @@ export class BotClient extends Client {
    * 
    * @example
    *    client.onEvent('ready', (client, info) => {
-   *      console.log(client?.user.username, '봇이 준비되었습니다.', info) // 출력: OOO 봇이 준비되었습니다. 추가 정보
+   *      Logger.ready(client?.user.username, '봇이 준비되었습니다.', info) // 출력: OOO 봇이 준비되었습니다. 추가 정보
    *    }, ['추가 정보']);
    * 
    * @param event 이벤트명
@@ -81,7 +80,6 @@ export class BotClient extends Client {
   }
 
   public help(name: string, metadata: ChatInputApplicationCommandData, msgmetadata?: { name: string, des: string }[]): EmbedBuilder | undefined {
-    const prefix = this.prefix;
     var text = "";
     metadata.options?.forEach((opt) => {
       text += `/${name} ${opt.name}`;
@@ -101,7 +99,7 @@ export class BotClient extends Client {
     if (msgmetadata) {
       text += `\n`;
       msgmetadata.forEach((opt) => {
-        text += `${prefix}${name} ${opt.name} : ${opt.des}\n`;
+        text += `${this.prefix}${name} ${opt.name} : ${opt.des}\n`;
       });
     }
     if (!text || text.length == 0) return undefined;

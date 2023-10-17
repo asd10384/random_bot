@@ -1,16 +1,17 @@
 import { client } from "../index";
 import { Command } from "../interfaces/Command";
+// import { Logger } from "../utils/Logger";
 import { Message, EmbedBuilder, ApplicationCommandOptionType, ChatInputApplicationCommandData, CommandInteraction } from "discord.js";
 // import { check_permission as ckper, embed_permission as emper } from "../utils/Permission";
 // import { QDB } from "../databases/Quickdb";
 
 /**
  * DB
- * let guildDB = await QDB.get(interaction.guild!);
+ * let GDB = await QDB.get(interaction.guild!);
  * 
  * check permission(role)
  * if (!(await ckper(interaction))) return await interaction.followUp({ embeds: [ emper ] });
- * if (!(await ckper(message))) return message.channel.send({ embeds: [ emper ] }).then(m => client.msgdelete(m, 1));
+ * if (!(await ckper(message))) return (message.channel as TextChannel).send({ embeds: [ emper ] }).then(m => client.msgdelete(m, 1));
  */
 
 export default class implements Command {
@@ -39,7 +40,7 @@ export default class implements Command {
   msgmetadata?: { name: string; des: string; }[] = undefined;
 
   /** 실행되는 부분 */
-  async slashRun(interaction: CommandInteraction): Promise<any> {
+  async slashRun(interaction: CommandInteraction) {
     const cmd = interaction.options.data[0];
     if (cmd.name === "test") {
       const data = cmd.options ? cmd.options[0]?.value : undefined;
@@ -59,7 +60,7 @@ export default class implements Command {
       })
     ] });
   }
-  async messageRun(message: Message, args: string[]) {
+  async messageRun(message: Message, args: string[], prefix: string) {
     return message.channel.send({ embeds: [
       client.mkembed({
         title: `example`,

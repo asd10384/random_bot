@@ -1,6 +1,6 @@
 import { client } from "../index";
 import { Command } from "../interfaces/Command";
-import { Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, ChatInputApplicationCommandData, ButtonInteraction, CommandInteraction } from "discord.js";
+import { Message, ActionRowBuilder, ButtonBuilder, EmbedBuilder, ButtonStyle, ChatInputApplicationCommandData, ButtonInteraction, CommandInteraction, TextChannel } from "discord.js";
 
 export default class implements Command {
   name = "ping";
@@ -19,13 +19,13 @@ export default class implements Command {
     return await interaction.followUp(this.ping());
   }
   async messageRun(message: Message) {
-    return message.channel.send(this.ping()).then(m => client.msgdelete(m, 3));
+    return (message.channel as TextChannel).send(this.ping()).then(m => client.msgdelete(m, 3));
   }
   async buttonRun(interaction: ButtonInteraction) {
     return await interaction.followUp(this.ping());
   }
 
-  ping(): { embeds: [ EmbedBuilder ], components: [ ActionRowBuilder<ButtonBuilder> ] } {
+  ping(): { embeds: [ EmbedBuilder ], components: [ ActionRowBuilder<ButtonBuilder> ], ephemeral: boolean } {
     const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(
       new ButtonBuilder()
         .setCustomId("ping-restart")
@@ -36,6 +36,6 @@ export default class implements Command {
       title: `Pong!`,
       description: `**${client.ws.ping}ms**`
     });
-    return { embeds: [ embed ], components: [ actionRow ] };
+    return { embeds: [ embed ], components: [ actionRow ], ephemeral: true };
   }
 }
