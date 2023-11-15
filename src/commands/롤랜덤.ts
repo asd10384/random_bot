@@ -69,6 +69,11 @@ export default class implements Command {
       },
       {
         type: ApplicationCommandOptionType.Subcommand,
+        name: "라인",
+        description: "롤 랜덤 라인"
+      },
+      {
+        type: ApplicationCommandOptionType.Subcommand,
         name: "진영",
         description: "롤 랜덤 진영"
       }
@@ -80,6 +85,10 @@ export default class implements Command {
       des: "롤 랜덤 캐릭터 [전체|탑|정글|미드|원딜|서폿]"
     },
     {
+      name: "라인",
+      des: "롤 랜덤 라인"
+    },
+    {
       name: "진영",
       des: "롤 랜덤 진영"
     }
@@ -89,6 +98,7 @@ export default class implements Command {
   async slashRun(interaction: CommandInteraction) {
     const cmd = interaction.options.data[0];
     if (cmd.name === "캐릭터") return await interaction.followUp({ embeds: [ await this.character("캐릭터", cmd.options![0].name, interaction.member as GuildMember) ] });
+    if (cmd.name === "라인") return await interaction.followUp({ embeds: [ await this.camp("라인", interaction.member as GuildMember) ] });
     if (cmd.name === "진영") return await interaction.followUp({ embeds: [ await this.camp("진영", interaction.member as GuildMember) ] });
     return await interaction.followUp({ embeds: [ this.help() ] });
   }
@@ -102,6 +112,7 @@ export default class implements Command {
       }) ] }).then(m => client.msgdelete(m, 1));
       return message.channel.send({ embeds: [ await this.character(args[0], args[1], message.member!) ] }).then(m => client.msgdelete(m, 7));;
     }
+    if (args[0] === "라인") return message.channel.send({ embeds: [ await this.camp(args[0], message.member!) ] }).then(m => client.msgdelete(m, 7));
     if (args[0] === "진영") return message.channel.send({ embeds: [ await this.camp(args[0], message.member!) ] }).then(m => client.msgdelete(m, 7));
     return message.channel.send({ embeds: [ this.help() ] }).then(m => client.msgdelete(m, 7));
   }
@@ -129,7 +140,7 @@ export default class implements Command {
   }
 
   async camp(text: string, member: GuildMember): Promise<EmbedBuilder> {
-    const camp = camp_list[random(camp_list.length)];
+    const camp = text === "진영" ? camp_list[random(camp_list.length)] : role_list[random(role_list.length)];
     return client.mkembed({
       author: { name: member.nickname || member.user.username },
       title: `${this.name} ${text} : ${camp}`
