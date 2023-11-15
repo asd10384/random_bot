@@ -1,6 +1,8 @@
 import { Interaction } from "discord.js";
 import { handler } from "..";
 
+import { rcp } from "../random/rcp";
+
 export const onInteractionCreate = async (interaction: Interaction) => {
   if (interaction.isStringSelectMenu()) {
     await interaction.deferReply({ ephemeral: true, fetchReply: true }).catch(() => {});
@@ -13,6 +15,7 @@ export const onInteractionCreate = async (interaction: Interaction) => {
   if (interaction.isButton()) {
     const args = interaction.customId.split("-");
     if (!args || args.length === 0) return;
+    if (args[0] === "rcp") return rcp(interaction, args[1]);
     await interaction.deferReply({ ephemeral: true, fetchReply: true });
     const command = handler.commands.get(args.shift()!);
     if (command && command.buttonRun) return command.buttonRun(interaction, args);
