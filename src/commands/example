@@ -60,7 +60,7 @@ export default class implements Command {
       })
     ] });
   }
-  async messageRun(message: Message, args: string[], prefix: string) {
+  async messageRun(message: Message, args: string[]) {
     return message.channel.send({ embeds: [
       client.mkembed({
         title: `example`,
