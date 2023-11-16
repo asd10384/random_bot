@@ -25,7 +25,7 @@ export default class implements Command {
   visible = true;
   description = "발로란트 랜덤";
   information = "발로란트 랜덤";
-  aliases: string[] = [];
+  aliases: string[] = [ "발로란트" ];
   metadata: ChatInputApplicationCommandData = {
     name: this.name,
     description: this.description,
@@ -108,6 +108,7 @@ export default class implements Command {
     return await interaction.followUp({ embeds: [ this.help() ] });
   }
   async messageRun(message: Message, args: string[]) {
+    if (args[0] === "랜덤") args = args.slice(1);
     if (args[0] === "맵") return message.channel.send({ embeds: [ await this.map(args[0], message.member!) ] }).then(m => client.msgdelete(m, 7));
     if (args[0] === "캐릭터") {
       if (!role_list.includes(args[1])) return message.channel.send({ embeds: [ client.mkembed({
