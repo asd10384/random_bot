@@ -25,7 +25,7 @@ export default class implements Command {
   visible = true;
   description = "롤 랜덤";
   information = "롤 랜덤";
-  aliases: string[] = [];
+  aliases: string[] = [ "롤" ];
   metadata: ChatInputApplicationCommandData = {
     name: this.name,
     description: this.description,
@@ -103,6 +103,7 @@ export default class implements Command {
     return await interaction.followUp({ embeds: [ this.help() ] });
   }
   async messageRun(message: Message, args: string[]) {
+    if (args[0] === "랜덤") args = args.slice(1);
     if (args[0] === "캐릭터") {
       if (!role_list.includes(args[1])) return message.channel.send({ embeds: [ client.mkembed({
         author: { name: message.member!.nickname || message.member!.user.username },
